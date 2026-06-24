@@ -20,4 +20,4 @@ MemoryCaptures/
 .DS_Store
 
 # Crash logs
-mono_crash.*
+mono_crash.*Pong/
