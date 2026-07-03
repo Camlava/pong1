@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ball
+  - SoundManager
   layers:
   - Default
   - TransparentFX
