@@ -3,7 +3,14 @@ using UnityEngine;
 public class BallMovement : MonoBehaviour
 {
     public float speed = 7f;
+
+    public float speedIncrease = 0.3f;
     private Rigidbody2D rb;
+
+    void Start()
+{
+    Launch();
+}
 
     void Awake()
     {
@@ -23,6 +30,11 @@ public class BallMovement : MonoBehaviour
     {
         rb.linearVelocity = Vector2.zero;
         transform.position = Vector2.zero;
+    }
+
+    public void IncreaseSpeed()
+    {
+    rb.linearVelocity *= (1f + speedIncrease);
     }
 }
 
