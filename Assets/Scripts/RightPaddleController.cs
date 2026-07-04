@@ -2,32 +2,43 @@ using UnityEngine;
 
 public class RightPaddleController : MonoBehaviour
 {
-    public float speed = 8f;
+    public PaddleStats stats;
 
-    // screen limits (adjust if needed)
     public float topLimit = 4.5f;
     public float bottomLimit = -4.5f;
 
-    void Update()
-{
-    if (ScoreManager.Instance != null &&
-        ScoreManager.Instance.singlePlayer)
+    void Awake()
     {
-        return; // AI will control later
+        if (stats == null)
+            stats = GetComponent<PaddleStats>();
     }
 
-    float move = 0f;
+    void Update()
+    {
+        if (stats == null)
+        {
+            Debug.LogError("PaddleStats is missing on Right Paddle!");
+            return;
+        }
 
-    if (Input.GetKey(KeyCode.UpArrow))
-        move = 1f;
+        if (ScoreManager.Instance != null &&
+            ScoreManager.Instance.singlePlayer)
+        {
+            return;
+        }
 
-    if (Input.GetKey(KeyCode.DownArrow))
-        move = -1f;
+        float move = 0f;
 
-    transform.position += Vector3.up * move * speed * Time.deltaTime;
+        if (Input.GetKey(KeyCode.UpArrow))
+            move = 1f;
 
-    ClampPosition();
-}
+        if (Input.GetKey(KeyCode.DownArrow))
+            move = -1f;
+
+        transform.position += Vector3.up * move * stats.moveSpeed * Time.deltaTime;
+
+        ClampPosition();
+    }
 
     void ClampPosition()
     {

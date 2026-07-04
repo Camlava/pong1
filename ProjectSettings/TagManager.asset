@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ball
   - SoundManager
+  - LeftPaddle
+  - RightPaddle
   layers:
   - Default
   - TransparentFX
