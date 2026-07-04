@@ -1012,7 +1012,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpSpawner
   longPaddlePowerUp: {fileID: 8172608405302978713, guid: a5c50cd9601be4ea08c6db1e4c05a6dc, type: 3}
   speedBoostPowerUp: {fileID: 314541296229281993, guid: c6a9adf8702cf4c53804737ba3cf76f9, type: 3}
-  shrinkOpponentPowerUp: {fileID: 6510027725448566673, guid: ed0f8bded1f6242bda0dbe1189431362, type: 3}
+  shrinkOpponentPowerUp: {fileID: 4238622312230881370, guid: ed0f8bded1f6242bda0dbe1189431362, type: 3}
   spawnInterval: 2
   minX: -2
   maxX: 2
