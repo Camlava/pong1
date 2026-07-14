@@ -24,17 +24,21 @@ public class ShrinkOpponentPowerUp : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other)
+{
+    if (other.CompareTag("LeftPaddle") || other.CompareTag("RightPaddle"))
     {
-        if (other.CompareTag("LeftPaddle") || other.CompareTag("RightPaddle"))
+        Transform opponent = GetOpponent(other.transform);
+
+        PaddleStats stats = opponent.GetComponent<PaddleStats>();
+
+        if (stats != null)
         {
-            Transform opponent = GetOpponent(other.transform);
-
-            StartCoroutine(Shrink(opponent));
-
-            GetComponent<Collider2D>().enabled = false;
-            GetComponent<SpriteRenderer>().enabled = false;
+            stats.StartShrink(shrinkFactor, duration);
         }
+
+        Destroy(gameObject);
     }
+}
 
     Transform GetOpponent(Transform paddle)
     {
@@ -44,20 +48,5 @@ public class ShrinkOpponentPowerUp : MonoBehaviour
         return GameObject.FindGameObjectWithTag("LeftPaddle").transform;
     }
 
-    IEnumerator Shrink(Transform paddle)
-    {
-        Vector3 original = paddle.localScale;
-
-        paddle.localScale = new Vector3(
-            original.x,
-            original.y * shrinkFactor,
-            original.z
-        );
-
-        yield return new WaitForSeconds(duration);
-
-        paddle.localScale = original;
-
-        Destroy(gameObject);
-    }
+    
 }

@@ -24,26 +24,19 @@ public class SpeedBoostPowerUp : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other)
+{
+    if (other.CompareTag("LeftPaddle") || other.CompareTag("RightPaddle"))
     {
-        PaddleStats stats = other.GetComponentInParent<PaddleStats>();
+        PaddleStats stats = other.GetComponent<PaddleStats>();
 
         if (stats != null)
         {
-            StartCoroutine(ApplyBoost(stats));
-
-            GetComponent<Collider2D>().enabled = false;
-            GetComponent<SpriteRenderer>().enabled = false;
+            stats.StartSpeedBoost(speedMultiplier, duration);
         }
-    }
-
-    IEnumerator ApplyBoost(PaddleStats stats)
-    {
-        stats.moveSpeed *= speedMultiplier;
-
-        yield return new WaitForSeconds(duration);
-
-        stats.moveSpeed /= speedMultiplier;
 
         Destroy(gameObject);
     }
+}
+
+    
 }

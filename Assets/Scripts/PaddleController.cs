@@ -4,11 +4,15 @@ public class PaddleController : MonoBehaviour
 {
     public PaddleStats stats;
 
+    public float topLimit = 4.5f;
+    public float bottomLimit = -4.5f;
+
     void Awake()
-{
-    if (stats == null)
-        stats = GetComponent<PaddleStats>();
-}
+    {
+        if (stats == null)
+            stats = GetComponent<PaddleStats>();
+    }
+
     void Update()
     {
         if (Input.GetKey(KeyCode.W))
@@ -20,5 +24,23 @@ public class PaddleController : MonoBehaviour
         {
             transform.position += Vector3.down * stats.moveSpeed * Time.deltaTime;
         }
+
+        ClampPosition();
     }
+
+    void ClampPosition()
+{
+    Vector3 pos = transform.position;
+
+    // Get half the paddle height after scaling (important for Long Paddle power-up)
+    float halfHeight = GetComponent<SpriteRenderer>().bounds.extents.y;
+
+    pos.y = Mathf.Clamp(
+        pos.y,
+        bottomLimit + halfHeight,
+        topLimit - halfHeight
+    );
+
+    transform.position = pos;
+}
 }

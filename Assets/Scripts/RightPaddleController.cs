@@ -41,9 +41,18 @@ public class RightPaddleController : MonoBehaviour
     }
 
     void ClampPosition()
-    {
-        Vector3 pos = transform.position;
-        pos.y = Mathf.Clamp(pos.y, bottomLimit, topLimit);
-        transform.position = pos;
-    }
+{
+    Vector3 pos = transform.position;
+
+    // Get half the paddle height after scaling (important for Long Paddle power-up)
+    float halfHeight = GetComponent<SpriteRenderer>().bounds.extents.y;
+
+    pos.y = Mathf.Clamp(
+        pos.y,
+        bottomLimit + halfHeight,
+        topLimit - halfHeight
+    );
+
+    transform.position = pos;
+}
 }
