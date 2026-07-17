@@ -23,8 +23,8 @@ public class SpeedBoostPowerUp : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-{
+ private void OnTriggerEnter2D(Collider2D other)    
+    {
     if (other.CompareTag("LeftPaddle") || other.CompareTag("RightPaddle"))
     {
         PaddleStats stats = other.GetComponent<PaddleStats>();
@@ -34,9 +34,16 @@ public class SpeedBoostPowerUp : MonoBehaviour
             stats.StartSpeedBoost(speedMultiplier, duration);
         }
 
+        PowerUpSpawner spawner = FindAnyObjectByType<PowerUpSpawner>();
+
+        if (spawner != null)
+        {
+            spawner.PowerUpCollected();
+        }
+
         Destroy(gameObject);
     }
-}
+    }
 
     
 }

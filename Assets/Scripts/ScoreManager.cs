@@ -4,6 +4,7 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
+
     public GameObject pausePanel;
     public GameObject gameOverPanel;
     public TextMeshProUGUI gameOverText;
@@ -11,154 +12,242 @@ public class ScoreManager : MonoBehaviour
     private bool isPaused = false;
 
     public bool singlePlayer => ScoreSettings.singlePlayer;
+
     public RightPaddleController rightPaddle;
+
     private BallMovement ball;
     private Rigidbody2D ballRb;
 
+
+    [Header("Classic Pong Settings")]
     public int winScore = 5;
     public GameObject winText;
-
 
     public int leftScore;
     public int rightScore;
 
+
+    [Header("Score UI")]
+    public GameObject scoreUI;
     public TextMeshProUGUI leftScoreText;
     public TextMeshProUGUI rightScoreText;
+
+
 
     void Awake()
     {
         Instance = this;
     }
 
+
     void Start()
-{
-    winText.SetActive(false);
-
-    if (pausePanel != null)
-        pausePanel.SetActive(false);
-
-    if (gameOverPanel != null)
-        gameOverPanel.SetActive(false);
-
-    leftScoreText.text = "0";
-    rightScoreText.text = "0";
-
-    ball = FindAnyObjectByType<BallMovement>();
-    ballRb = ball.GetComponent<Rigidbody2D>();
+    {
+        if (winText != null)
+            winText.SetActive(false);
 
 
-}
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+
+
+
+        // Switch UI depending on mode
+        if (ScoreSettings.battleMode)
+        {
+            if (scoreUI != null)
+                scoreUI.SetActive(false);
+        }
+        else
+        {
+            if (scoreUI != null)
+                scoreUI.SetActive(true);
+
+            leftScoreText.text = "0";
+            rightScoreText.text = "0";
+        }
+
+
+        ball = FindAnyObjectByType<BallMovement>();
+        ballRb = ball.GetComponent<Rigidbody2D>();
+    }
+
+
 
     public void LeftScores()
     {
-    leftScore++;
-    leftScoreText.text = leftScore.ToString();
+        leftScore++;
 
-    if (leftScore >= winScore)
-    {
-        EndGame("Left Player Wins!");
-        return;
+        if (!ScoreSettings.battleMode)
+            leftScoreText.text = leftScore.ToString();
+
+
+        if (leftScore >= winScore)
+        {
+            EndGame("Left Player Wins!");
+            return;
+        }
+
+
+        if (GameModeManager.Instance != null)
+        {
+            GameModeManager.Instance.CheckModes();
+        }
+
+
+        ResetBall();
     }
 
-    ResetBall();
-    }
+
 
     public void RightScores()
     {
-    rightScore++;
-    rightScoreText.text = rightScore.ToString();
+        rightScore++;
 
-    if (rightScore >= winScore)
-    {
-        EndGame("Right Player Wins!");
-        return;
+        if (!ScoreSettings.battleMode)
+            rightScoreText.text = rightScore.ToString();
+
+
+        if (rightScore >= winScore)
+        {
+            EndGame("Right Player Wins!");
+            return;
+        }
+
+
+        if (GameModeManager.Instance != null)
+        {
+            GameModeManager.Instance.CheckModes();
+        }
+
+
+        ResetBall();
     }
 
-    ResetBall();
-    }
+
 
     void ResetBall()
     {
         BallMovement ball = FindAnyObjectByType<BallMovement>();
+
         ball.transform.position = Vector3.zero;
 
         Rigidbody2D rb = ball.GetComponent<Rigidbody2D>();
+
         rb.linearVelocity = Vector2.zero;
 
         ball.Launch();
     }
+
+
+
     void EndGame(string message)
     {
-    ballRb.linearVelocity = Vector2.zero;
+        ballRb.linearVelocity = Vector2.zero;
 
-    Time.timeScale = 0f;
+        Time.timeScale = 0f;
 
-    if (gameOverPanel != null)
-    {
-        gameOverPanel.SetActive(true);
-        gameOverText.text = message;
-    }
-    else
-    {
-        winText.SetActive(true);
-        winText.GetComponent<TextMeshProUGUI>().text = message;
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+
+            if(gameOverText != null)
+                gameOverText.text = message;
+        }
+        else if(winText != null)
+        {
+            winText.SetActive(true);
+
+            winText.GetComponent<TextMeshProUGUI>().text = message;
+        }
+
+
+        Debug.Log(message);
     }
 
-    Debug.Log(message);
-    }
+
 
     public void RestartGame()
     {
-    Time.timeScale = 1f;
-    isPaused = false;
+        Time.timeScale = 1f;
 
-    leftScore = 0;
-    rightScore = 0;
+        isPaused = false;
 
-    leftScoreText.text = "0";
-    rightScoreText.text = "0";
 
-    winText.SetActive(false);
+        leftScore = 0;
+        rightScore = 0;
 
-    if (pausePanel != null)
-        pausePanel.SetActive(false);
 
-    if (gameOverPanel != null)
-        gameOverPanel.SetActive(false);
+        if (!ScoreSettings.battleMode)
+        {
+            leftScoreText.text = "0";
+            rightScoreText.text = "0";
+        }
 
-    ball.transform.position = Vector3.zero;
-    ballRb.linearVelocity = Vector2.zero;
 
-    ball.Launch();
+        if(winText != null)
+            winText.SetActive(false);
+
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+
+
+        ball.transform.position = Vector3.zero;
+
+        ballRb.linearVelocity = Vector2.zero;
+
+        ball.Launch();
     }
+
+
 
     public void PauseGame()
     {
-    pausePanel.SetActive(true);
-    Time.timeScale = 0f;
-    isPaused = true;
+        if (pausePanel != null)
+            pausePanel.SetActive(true);
+
+        Time.timeScale = 0f;
+
+        isPaused = true;
     }
 
-public void ResumeGame()
+
+
+    public void ResumeGame()
     {
-    pausePanel.SetActive(false);
-    Time.timeScale = 1f;
-    isPaused = false;
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        Time.timeScale = 1f;
+
+        isPaused = false;
     }
 
-void Update()
-    {
-    if (Input.GetKeyDown(KeyCode.R))
-    {
-        RestartGame();
-    }
 
-    if (Input.GetKeyDown(KeyCode.Escape))
+
+    void Update()
     {
-        if (isPaused)
-            ResumeGame();
-        else
-            PauseGame();
-    }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartGame();
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+                ResumeGame();
+            else
+                PauseGame();
+        }
     }
 }

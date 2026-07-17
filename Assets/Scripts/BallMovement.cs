@@ -36,6 +36,21 @@ public class BallMovement : MonoBehaviour
     {
     rb.linearVelocity *= (1f + speedIncrease);
     }
+
+    public void SetSpeed(float newSpeed)
+{
+    speed = newSpeed;
+
+    if (rb.linearVelocity != Vector2.zero)
+    {
+        rb.linearVelocity = rb.linearVelocity.normalized * speed;
+    }
+}
+
+public float GetSpeed()
+{
+    return speed;
+}
 }
 
     

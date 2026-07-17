@@ -23,8 +23,8 @@ public class ShrinkOpponentPowerUp : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-{
+  private void OnTriggerEnter2D(Collider2D other)
+    {
     if (other.CompareTag("LeftPaddle") || other.CompareTag("RightPaddle"))
     {
         Transform opponent = GetOpponent(other.transform);
@@ -36,10 +36,16 @@ public class ShrinkOpponentPowerUp : MonoBehaviour
             stats.StartShrink(shrinkFactor, duration);
         }
 
+        PowerUpSpawner spawner = FindAnyObjectByType<PowerUpSpawner>();
+
+        if (spawner != null)
+        {
+            spawner.PowerUpCollected();
+        }
+
         Destroy(gameObject);
     }
-}
-
+    }
     Transform GetOpponent(Transform paddle)
     {
         if (paddle.CompareTag("LeftPaddle"))

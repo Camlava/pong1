@@ -27,19 +27,26 @@ public class LongPaddlePowerUp : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+   private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("LeftPaddle") || other.CompareTag("RightPaddle"))
+    if (other.CompareTag("LeftPaddle") || other.CompareTag("RightPaddle"))
+    {
+        PaddleStats stats = other.GetComponent<PaddleStats>();
+
+        if (stats != null)
         {
-            PaddleStats stats = other.GetComponent<PaddleStats>();
-
-            if (stats != null)
-            {
-                stats.StartLongPaddle(scaleMultiplier, duration);
-            }
-
-            Destroy(gameObject);
+            stats.StartLongPaddle(scaleMultiplier, duration);
         }
+
+        PowerUpSpawner spawner = FindAnyObjectByType<PowerUpSpawner>();
+
+        if (spawner != null)
+        {
+            spawner.PowerUpCollected();
+        }
+
+        Destroy(gameObject);
+    }
     }
 
     void OnDestroy()
