@@ -23,7 +23,18 @@ public class MainMenu : MonoBehaviour
 
     public void PlayBattleMode()
     {
+        // Battle Mode - Player vs Player
         ScoreSettings.singlePlayer = false;
+        ScoreSettings.battleMode = true;
+
+        SceneManager.LoadScene("Game");
+    }
+
+
+    public void PlayBattleCPU()
+    {
+        // Battle Mode - Player vs AI
+        ScoreSettings.singlePlayer = true;
         ScoreSettings.battleMode = true;
 
         SceneManager.LoadScene("Game");

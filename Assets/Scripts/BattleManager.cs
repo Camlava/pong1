@@ -7,14 +7,29 @@ public class BattleManager : MonoBehaviour
 
     public int maxHealth = 5;
 
+    public bool leftShieldActive;
+    public bool rightShieldActive;
+
+    public bool leftDamageBoost;
+    public bool rightDamageBoost;
     public int leftHealth;
     public int rightHealth;
 
+
+    [Header("Health UI")]
     public TextMeshProUGUI leftHealthText;
     public TextMeshProUGUI rightHealthText;
 
+    public string fullHeart = "♥";
+public string emptyHeart = "-";
+
+
+    [Header("Battle UI")]
+    public GameObject battleUI;
+
     public GameObject battleWinPanel;
     public TextMeshProUGUI winnerText;
+
 
 
     void Awake()
@@ -23,84 +38,220 @@ public class BattleManager : MonoBehaviour
     }
 
 
+
     void Start()
     {
         leftHealth = maxHealth;
         rightHealth = maxHealth;
 
+
+        // Only show Battle UI in Battle Mode
+        if (battleUI != null)
+        {
+            battleUI.SetActive(ScoreSettings.battleMode);
+        }
+
+
         UpdateUI();
     }
+
 
 
     public void DamageLeft()
+{
+    if(leftShieldActive)
     {
-        leftHealth--;
+        leftShieldActive = false;
 
-        UpdateUI();
-
-        if(leftHealth <= 0)
-        {
-            EndBattle("Right Player Wins!");
-            return;
-        }
+        Debug.Log("Left Player Shield Blocked Damage!");
 
         ResetRound();
+        return;
     }
+
+
+    if(leftDamageBoost)
+{
+    leftHealth -= 2;
+    leftDamageBoost = false;
+
+    Debug.Log("Left Player dealt bonus damage!");
+}
+else
+{
+    leftHealth--;
+}
+
+    UpdateUI();
+
+
+    if(leftHealth <= 0)
+    {
+        EndBattle("Right Player Wins!");
+        return;
+    }
+
+
+    ResetRound();
+}
 
 
     public void DamageRight()
+{
+    if(rightShieldActive)
     {
-        rightHealth--;
+        rightShieldActive = false;
 
-        UpdateUI();
-
-        if(rightHealth <= 0)
-        {
-            EndBattle("Left Player Wins!");
-            return;
-        }
+        Debug.Log("Right Player Shield Blocked Damage!");
 
         ResetRound();
+        return;
     }
 
+
+    if(rightDamageBoost)
+{
+    rightHealth -= 2;
+    rightDamageBoost = false;
+
+    Debug.Log("Right Player dealt bonus damage!");
+}
+else
+{
+    rightHealth--;
+}
+
+    UpdateUI();
+
+
+    if(rightHealth <= 0)
+    {
+        EndBattle("Left Player Wins!");
+        return;
+    }
+
+
+    ResetRound();
+}
 
     void UpdateUI()
     {
-    if(leftHealthText != null)
-        leftHealthText.text = leftHealth.ToString();
+        if(leftHealthText != null)
+        {
+            leftHealthText.text = CreateHealthBar(leftHealth);
+        }
 
-    if(rightHealthText != null)
-        rightHealthText.text = rightHealth.ToString();
+
+        if(rightHealthText != null)
+        {
+            rightHealthText.text = CreateHealthBar(rightHealth);
+        }
     }
+
+
+
+    string CreateHealthBar(int health)
+    {
+        string hearts = "";
+
+
+        for(int i = 0; i < maxHealth; i++)
+        {
+            if(i < health)
+                hearts += fullHeart;
+            else
+                hearts += emptyHeart;
+        }
+
+
+        return hearts;
+    }
+
+
 
     void ResetRound()
     {
-    BallMovement ball = FindAnyObjectByType<BallMovement>();
+        BallMovement ball = FindAnyObjectByType<BallMovement>();
 
-    ball.transform.position = Vector3.zero;
+        ball.transform.position = Vector3.zero;
 
-    Rigidbody2D rb = ball.GetComponent<Rigidbody2D>();
 
-    rb.linearVelocity = Vector2.zero;
+        Rigidbody2D rb = ball.GetComponent<Rigidbody2D>();
 
-    ball.Launch();
+        rb.linearVelocity = Vector2.zero;
+
+
+        ball.Launch();
     }
+
 
 
     void EndBattle(string message)
     {
-    Time.timeScale = 0f;
+        Time.timeScale = 0f;
 
-    if (battleWinPanel != null)
+
+        if (battleWinPanel != null)
+        {
+            battleWinPanel.SetActive(true);
+        }
+
+
+        if (winnerText != null)
+        {
+            winnerText.text = message;
+        }
+
+
+        Debug.Log(message);
+    }
+
+    public void HealLeft(int amount)
+{
+    leftHealth += amount;
+
+    if(leftHealth > maxHealth)
+        leftHealth = maxHealth;
+
+    UpdateUI();
+}
+
+
+public void HealRight(int amount)
+{
+    rightHealth += amount;
+
+    if(rightHealth > maxHealth)
+        rightHealth = maxHealth;
+
+    UpdateUI();
+}
+
+public void ActivateShield(bool leftPlayer)
+{
+    if(leftPlayer)
     {
-        battleWinPanel.SetActive(true);
+        leftShieldActive = true;
+        Debug.Log("Left Player Shield Activated!");
     }
-
-    if (winnerText != null)
+    else
     {
-        winnerText.text = message;
+        rightShieldActive = true;
+        Debug.Log("Right Player Shield Activated!");
     }
+}
 
-    Debug.Log(message);
+public void ActivateDamageBoost(bool leftPlayer)
+{
+    if(leftPlayer)
+    {
+        leftDamageBoost = true;
+        Debug.Log("Left Player Damage Boost Activated!");
     }
+    else
+    {
+        rightDamageBoost = true;
+        Debug.Log("Right Player Damage Boost Activated!");
+    }
+}
 }

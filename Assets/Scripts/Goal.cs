@@ -4,39 +4,35 @@ public class Goal : MonoBehaviour
 {
     public bool leftGoal;
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Ball"))
             return;
 
 
-        // Battle Mode
         if (ScoreSettings.battleMode)
         {
+            // Battle Mode
             if (leftGoal)
             {
-                // Ball entered left side
-                BattleManager.Instance.DamageLeft();
+                BattleManager.Instance.DamageRight();
             }
             else
             {
-                // Ball entered right side
-                BattleManager.Instance.DamageRight();
+                BattleManager.Instance.DamageLeft();
             }
-
-            return;
-        }
-
-
-        // Normal Pong Mode
-        if (leftGoal)
-        {
-            ScoreManager.Instance.RightScores();
         }
         else
         {
-            ScoreManager.Instance.LeftScores();
+            // Normal Pong
+            if (leftGoal)
+            {
+                ScoreManager.Instance.RightScores();
+            }
+            else
+            {
+                ScoreManager.Instance.LeftScores();
+            }
         }
     }
 }

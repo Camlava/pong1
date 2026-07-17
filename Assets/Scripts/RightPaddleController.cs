@@ -14,31 +14,31 @@ public class RightPaddleController : MonoBehaviour
     }
 
     void Update()
+{
+    if (stats == null)
     {
-        if (stats == null)
-        {
-            Debug.LogError("PaddleStats is missing on Right Paddle!");
-            return;
-        }
-
-        if (ScoreManager.Instance != null &&
-            ScoreManager.Instance.singlePlayer)
-        {
-            return;
-        }
-
-        float move = 0f;
-
-        if (Input.GetKey(KeyCode.UpArrow))
-            move = 1f;
-
-        if (Input.GetKey(KeyCode.DownArrow))
-            move = -1f;
-
-        transform.position += Vector3.up * move * stats.moveSpeed * Time.deltaTime;
-
-        ClampPosition();
+        Debug.LogError("PaddleStats is missing on Right Paddle!");
+        return;
     }
+
+    // Let AI control the paddle in CPU modes
+    if (ScoreSettings.singlePlayer)
+    {
+        return;
+    }
+
+    float move = 0f;
+
+    if (Input.GetKey(KeyCode.UpArrow))
+        move = 1f;
+
+    if (Input.GetKey(KeyCode.DownArrow))
+        move = -1f;
+
+    transform.position += Vector3.up * move * stats.moveSpeed * Time.deltaTime;
+
+    ClampPosition();
+}
 
     void ClampPosition()
 {

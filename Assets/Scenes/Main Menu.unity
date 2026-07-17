@@ -1481,7 +1481,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1634254661}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: PlayBattleMode
+        m_MethodName: PlayBattleCPU
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
