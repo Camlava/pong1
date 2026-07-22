@@ -33,33 +33,26 @@ public class HealPowerUp : MonoBehaviour
 
 
     private void OnTriggerEnter2D(Collider2D other)
+{
+    Debug.Log("Touched Object: " + other.name);
+    Debug.Log("Tag: " + other.tag);
+
+    if (other.CompareTag("LeftPaddle"))
     {
-        if(other.CompareTag("LeftPaddle") || other.CompareTag("RightPaddle"))
-        {
-            if(BattleManager.Instance != null)
-            {
-                if(other.CompareTag("LeftPaddle"))
-                {
-                    BattleManager.Instance.HealLeft(healAmount);
-                    Debug.Log("Left Player Healed");
-                }
-                else if(other.CompareTag("RightPaddle"))
-                {
-                    BattleManager.Instance.HealRight(healAmount);
-                    Debug.Log("Right Player Healed");
-                }
-            }
-
-
-            PowerUpSpawner spawner = FindAnyObjectByType<PowerUpSpawner>();
-
-            if(spawner != null)
-            {
-                spawner.PowerUpCollected();
-            }
-
-
-            Destroy(gameObject);
-        }
+        Debug.Log("Healing LEFT");
+        BattleManager.Instance.HealLeft(healAmount);
     }
+    else if (other.CompareTag("RightPaddle"))
+    {
+        Debug.Log("Healing RIGHT");
+        BattleManager.Instance.HealRight(healAmount);
+    }
+
+    PowerUpSpawner spawner = FindAnyObjectByType<PowerUpSpawner>();
+
+    if (spawner != null)
+        spawner.PowerUpCollected();
+
+    Destroy(gameObject);
+}
 }

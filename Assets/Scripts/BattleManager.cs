@@ -57,30 +57,28 @@ public string emptyHeart = "-";
 
 
 
-    public void DamageLeft()
+   public void DamageLeft()
 {
     if(leftShieldActive)
     {
         leftShieldActive = false;
-
-        Debug.Log("Left Player Shield Blocked Damage!");
-
         ResetRound();
         return;
     }
 
 
     if(leftDamageBoost)
-{
-    leftHealth -= 2;
-    leftDamageBoost = false;
+    {
+        leftHealth -= 2;
+        leftDamageBoost = false;
+    }
+    else
+    {
+        leftHealth--;
+    }
 
-    Debug.Log("Left Player dealt bonus damage!");
-}
-else
-{
-    leftHealth--;
-}
+
+    leftHealth = Mathf.Max(leftHealth, 0);
 
     UpdateUI();
 
@@ -95,31 +93,28 @@ else
     ResetRound();
 }
 
-
-    public void DamageRight()
+   public void DamageRight()
 {
     if(rightShieldActive)
     {
         rightShieldActive = false;
-
-        Debug.Log("Right Player Shield Blocked Damage!");
-
         ResetRound();
         return;
     }
 
 
     if(rightDamageBoost)
-{
-    rightHealth -= 2;
-    rightDamageBoost = false;
+    {
+        rightHealth -= 2;
+        rightDamageBoost = false;
+    }
+    else
+    {
+        rightHealth--;
+    }
 
-    Debug.Log("Right Player dealt bonus damage!");
-}
-else
-{
-    rightHealth--;
-}
+
+    rightHealth = Mathf.Max(rightHealth, 0);
 
     UpdateUI();
 
@@ -133,21 +128,18 @@ else
 
     ResetRound();
 }
-
     void UpdateUI()
+{
+    if(leftHealthText != null)
     {
-        if(leftHealthText != null)
-        {
-            leftHealthText.text = CreateHealthBar(leftHealth);
-        }
-
-
-        if(rightHealthText != null)
-        {
-            rightHealthText.text = CreateHealthBar(rightHealth);
-        }
+        leftHealthText.text = "LEFT " + leftHealth;
     }
 
+    if(rightHealthText != null)
+    {
+        rightHealthText.text = "RIGHT " + rightHealth;
+    }
+}
 
 
     string CreateHealthBar(int health)
@@ -208,10 +200,17 @@ else
 
     public void HealLeft(int amount)
 {
+    Debug.Log("Before Heal Left: " + leftHealth + " / " + rightHealth);
+
+    if(leftHealth > 0)
+{
     leftHealth += amount;
+}
 
     if(leftHealth > maxHealth)
         leftHealth = maxHealth;
+
+    Debug.Log("After Heal Left: " + leftHealth + " / " + rightHealth);
 
     UpdateUI();
 }
@@ -219,10 +218,17 @@ else
 
 public void HealRight(int amount)
 {
+    Debug.Log("Before Heal Right: " + leftHealth + " / " + rightHealth);
+
+    if(rightHealth > 0)
+{
     rightHealth += amount;
+}
 
     if(rightHealth > maxHealth)
         rightHealth = maxHealth;
+
+    Debug.Log("After Heal Right: " + leftHealth + " / " + rightHealth);
 
     UpdateUI();
 }

@@ -15,24 +15,29 @@ public class Goal : MonoBehaviour
             // Battle Mode
             if (leftGoal)
             {
-                BattleManager.Instance.DamageRight();
+                // Ball went into left side goal
+                // Left player loses health
+                BattleManager.Instance.DamageLeft();
             }
             else
             {
-                BattleManager.Instance.DamageLeft();
+                // Ball went into right side goal
+                // Right player loses health
+                BattleManager.Instance.DamageRight();
             }
+
+            return;
+        }
+
+
+        // Normal Pong
+        if (leftGoal)
+        {
+            ScoreManager.Instance.RightScores();
         }
         else
         {
-            // Normal Pong
-            if (leftGoal)
-            {
-                ScoreManager.Instance.RightScores();
-            }
-            else
-            {
-                ScoreManager.Instance.LeftScores();
-            }
+            ScoreManager.Instance.LeftScores();
         }
     }
 }
