@@ -74,6 +74,8 @@ public class GameModeManager : MonoBehaviour
         dangerMode = true;
 
         ball.SetSpeed(normalBallSpeed * 1.25f);
+        SpriteRenderer m_SpriteRenderer = ball.GetComponent<SpriteRenderer>();
+        m_SpriteRenderer.color = Color.red;
 
         ShowMessage("🔥 DANGER MODE!", Color.red);
     }
@@ -114,6 +116,9 @@ public class GameModeManager : MonoBehaviour
             losingPlayer.transform.localScale.z
         );
 
+        SpriteRenderer m_SpriteRenderer = losingPlayer.GetComponent<SpriteRenderer>();
+        m_SpriteRenderer.color = Color.gold;
+
 
         // Slower ball for comeback chance
         float ballSpeed;
@@ -145,6 +150,13 @@ public class GameModeManager : MonoBehaviour
 
         leftStats.transform.localScale = leftScale;
         rightStats.transform.localScale = rightScale;
+
+        SpriteRenderer m_SpriteRenderer = leftStats.GetComponent<SpriteRenderer>();
+        m_SpriteRenderer.color = Color.white;
+        m_SpriteRenderer = rightStats.GetComponent<SpriteRenderer>();
+        m_SpriteRenderer.color = Color.white;
+        m_SpriteRenderer = ball.GetComponent<SpriteRenderer>();
+        m_SpriteRenderer.color = Color.white;
 
 
         dangerMode = false;
