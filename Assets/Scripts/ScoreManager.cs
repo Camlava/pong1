@@ -206,6 +206,11 @@ public class ScoreManager : MonoBehaviour
         ballRb.linearVelocity = Vector2.zero;
 
         ball.Launch();
+
+        if(ScoreSettings.battleMode && BattleManager.Instance != null)
+{
+    BattleManager.Instance.ResetBattle();
+}
     }
 
 

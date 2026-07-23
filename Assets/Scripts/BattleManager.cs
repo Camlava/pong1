@@ -176,28 +176,31 @@ public string emptyHeart = "-";
         ball.Launch();
     }
 
+    public void ResetBattle()
+{
+    leftHealth = maxHealth;
+    rightHealth = maxHealth;
+
+    UpdateUI();
+
+    if(battleWinPanel != null)
+        battleWinPanel.SetActive(false);
+}
+
 
 
     void EndBattle(string message)
+{
+    Time.timeScale = 0f;
+
+    if(ScoreManager.Instance != null)
     {
-        Time.timeScale = 0f;
-
-
-        if (battleWinPanel != null)
-        {
-            battleWinPanel.SetActive(true);
-        }
-
-
-        if (winnerText != null)
-        {
-            winnerText.text = message;
-        }
-
-
-        Debug.Log(message);
+        ScoreManager.Instance.gameOverPanel.SetActive(true);
+        ScoreManager.Instance.gameOverText.text = message;
     }
 
+    Debug.Log(message);
+}
     public void HealLeft(int amount)
 {
     Debug.Log("Before Heal Left: " + leftHealth + " / " + rightHealth);
